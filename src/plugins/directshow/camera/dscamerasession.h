@@ -50,6 +50,7 @@
 #include <QtMultimedia/qabstractvideosurface.h>
 #include <QtMultimedia/qvideosurfaceformat.h>
 #include <QtMultimedia/qcameraimageprocessingcontrol.h>
+#include <QtMultimedia/qimageencodercontrol.h>
 #include <private/qmediastoragelocation_p.h>
 
 #include <tchar.h>
@@ -103,6 +104,11 @@ public:
 
     QList<QCameraViewfinderSettings> supportedViewfinderSettings() const
     { return m_supportedViewfinderSettings; }
+
+    QImageEncoderSettings imageEncoderSettings() const;
+    void setImageEncoderSettings(const QImageEncoderSettings &settings);
+
+    QList<QSize> supportedResolutions() const;
 
     bool isImageProcessingParameterSupported(
             QCameraImageProcessingControl::ProcessingParameter) const;
@@ -199,6 +205,7 @@ private:
     QSize m_previewSize;
     QCameraViewfinderSettings m_viewfinderSettings;
     QCameraViewfinderSettings m_actualViewfinderSettings;
+    QImageEncoderSettings m_imageEncoderSettings; //resolutions and codecs of captured image
 
     // Image capture
     QString m_imageCaptureFileName;

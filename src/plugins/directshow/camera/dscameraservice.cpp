@@ -46,6 +46,7 @@
 #include "dsvideorenderer.h"
 #include "dsvideodevicecontrol.h"
 #include "dsimagecapturecontrol.h"
+#include "dsimageencodercontrol.h"
 #include "dscameraviewfindersettingscontrol.h"
 #include "dscameraimageprocessingcontrol.h"
 
@@ -59,8 +60,10 @@ DSCameraService::DSCameraService(QObject *parent):
     m_control = new DSCameraControl(m_session);
     m_videoDevice = new DSVideoDeviceControl(m_session);
     m_imageCapture = new DSImageCaptureControl(m_session);
+    m_imageEncoder = new DSImageEncoderControl(m_session);
     m_viewfinderSettings = new DSCameraViewfinderSettingsControl(m_session);
     m_imageProcessingControl = new DSCameraImageProcessingControl(m_session);
+
 }
 
 DSCameraService::~DSCameraService()
@@ -71,6 +74,7 @@ DSCameraService::~DSCameraService()
     delete m_videoDevice;
     delete m_videoRenderer;
     delete m_imageCapture;
+    delete m_imageEncoder;
     delete m_session;
 }
 
@@ -88,6 +92,9 @@ QMediaControl* DSCameraService::requestControl(const char *name)
             return m_videoRenderer;
         }
     }
+
+    if (qstrcmp(name,QImageEncoderControl_iid) == 0)
+        return m_imageEncoder;
 
     if (qstrcmp(name,QVideoDeviceSelectorControl_iid) == 0)
         return m_videoDevice;

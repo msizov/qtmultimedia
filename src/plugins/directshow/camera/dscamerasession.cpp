@@ -236,6 +236,29 @@ void DSCameraSession::setViewfinderSettings(const QCameraViewfinderSettings &set
     m_viewfinderSettings = settings;
 }
 
+QImageEncoderSettings DSCameraSession::imageEncoderSettings() const
+{
+    return m_imageEncoderSettings;
+}
+
+void DSCameraSession::setImageEncoderSettings(const QImageEncoderSettings &settings)
+{
+    m_imageEncoderSettings = settings;
+}
+
+QList<QSize> DSCameraSession::supportedResolutions() const
+{
+    QList<QSize> l;
+    for (const QCameraViewfinderSettings &s : qAsConst(m_supportedViewfinderSettings))
+    {
+        if (s.resolution().isValid())
+        {
+            l << s.resolution();
+        }
+    }
+    return l;
+}
+
 qreal DSCameraSession::scaledImageProcessingParameterValue(
         const ImageProcessingParameterInfo &sourceValueInfo)
 {
@@ -882,8 +905,9 @@ bool DSCameraSession::configurePreviewFormat()
     // Resolve viewfinder settings
     int settingsIndex = 0;
     QCameraViewfinderSettings resolvedViewfinderSettings;
+
     for (const QCameraViewfinderSettings &s : qAsConst(m_supportedViewfinderSettings)) {
-        if ((m_viewfinderSettings.resolution().isEmpty() || m_viewfinderSettings.resolution() == s.resolution())
+        if ((m_imageEncoderSettings.resolution().isEmpty() || m_imageEncoderSettings.resolution() == s.resolution())
                 && (qFuzzyIsNull(m_viewfinderSettings.minimumFrameRate()) || qFuzzyCompare((float)m_viewfinderSettings.minimumFrameRate(), (float)s.minimumFrameRate()))
                 && (qFuzzyIsNull(m_viewfinderSettings.maximumFrameRate()) || qFuzzyCompare((float)m_viewfinderSettings.maximumFrameRate(), (float)s.maximumFrameRate()))
                 && (m_viewfinderSettings.pixelFormat() == QVideoFrame::Format_Invalid || m_viewfinderSettings.pixelFormat() == s.pixelFormat())
